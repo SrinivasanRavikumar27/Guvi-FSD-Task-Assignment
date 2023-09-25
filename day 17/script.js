@@ -55,15 +55,15 @@ Climate     : ${climate};
   
 
 res1.then((data) => data.json()).then((data1) => {
-   data1.forEach(countryData => {
 
-    var lat = countryData.latlng[0];
-    var lng = countryData.latlng[1];
+    var rowDiv = divTag("div", "row"); // Create a row div
+    data1.forEach((countryData, index) => {
+        var lat = countryData.latlng[0];
+        var lng = countryData.latlng[1];
 
-   let divtag = divTag("div","container");
-   let divtag1 = divTag("div","row col-lg-4 col-sm-12");
-   let divtag2 = divTag("div","card");
-   let divtag3 = divTag("div","card-header");
+        let divtag1 = divTag("div", "col-lg-4 col-sm-12"); // Create a column div
+        let divtag2 = divTag("div", "card");
+        let divtag3 = divTag("div", "card-header");
 
    divtag3.innerHTML = `${countryData.name.common}`;
    
@@ -86,9 +86,21 @@ res1.then((data) => data.json()).then((data1) => {
    buttonTag.setAttribute("onclick",`wheather(${lat},${lng})`);
    buttonTag.innerHTML = "Click for Wheather"
 
-   divtag4.append(imgTag,ptag,ptag1,ptag2,buttonTag);
+   divtag4.append(imgTag, ptag, ptag1, ptag2, buttonTag);
+        divtag2.append(divtag3, divtag4);
+        divtag1.appendChild(divtag2);
 
-   document.body.append(divtag,divtag1,divtag2,divtag3,divtag4);
-   });
+        if (index % 3 === 0) {
+            // Close the current row and start a new one every 3 cards
+            document.body.appendChild(rowDiv);
+            rowDiv = divTag("div", "row");
+        }
+
+        rowDiv.appendChild(divtag1);
+    });
+
+    // Append any remaining cards in the last row
+    document.body.appendChild(rowDiv);
+
 });
 
